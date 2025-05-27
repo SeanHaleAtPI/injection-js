@@ -18,19 +18,20 @@ export function getCurrentInjector(): Injector | undefined {
 export function setCurrentInjector(
   injector: Injector | undefined,
 ): Injector | undefined {
-  const former = _currentInjector;
+  const former = getCurrentInjector();
   _currentInjector = injector;
   return former;
 }
 
 
 export function inject<T>(token: Type<T> | InjectionToken<T>): T {
-  if (_currentInjector === undefined) {
+  const currentInjector = getCurrentInjector();
+  if (currentInjector === undefined) {
     throw new Error(
       `inject() must be called from an injection context such as a constructor, a factory function, or a field initializer`,
     );
   } else {
-    const value = _currentInjector.get(token);
+    const value = currentInjector.get(token);
     return value;
   }
 }
